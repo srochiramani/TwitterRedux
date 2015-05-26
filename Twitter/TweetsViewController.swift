@@ -8,12 +8,17 @@
 
 import UIKit
 
-class TweetsViewController: UITableViewController {
+class TweetsViewController: UITableViewController, UINavigationBarDelegate {
     
     var tweets : [Tweet]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 120
+        
+        self.navigationController!.navigationBar.barTintColor = UIColor(red: 0.33, green: 0.67, blue: 0.93, alpha: 0)
         
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: "fetchTweets", forControlEvents: UIControlEvents.ValueChanged)
@@ -23,6 +28,9 @@ class TweetsViewController: UITableViewController {
 
     @IBAction func onLogout(sender: AnyObject) {
         User.currentUser?.logout()
+    }
+    
+    @IBAction func onCompose(sender: AnyObject) {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -38,6 +46,22 @@ class TweetsViewController: UITableViewController {
         let tweet = tweets![indexPath.row]
         cell.tweet = tweet
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let sender = sender as? TweetTableViewCell {
+            let cell = sender as! TweetTableViewCell
+            let indexPath = tableView.indexPathForCell(cell)!
+            
+            let tweet = self.tweets![indexPath.row]
+            let tweetDetailViewController = segue.destinationViewController as! TweetDetailViewController
+            tweetDetailViewController.tweet = tweet
+        }
+
     }
     
     func fetchTweets() {

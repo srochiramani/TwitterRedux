@@ -19,21 +19,28 @@ class TweetTableViewCell: UITableViewCell {
     var tweet : Tweet? {
         didSet {
             let author = tweet?.author
-            if author != nil {
-                if author!.profileImageUrl != nil {
-                    let authorAvataUrl = NSURL(string: author!.profileImageUrl!)
+            if let author = author {
+                if author.profileImageUrl != nil {
+                    let authorAvataUrl = NSURL(string: author.profileImageUrl!)
                     userAvatarImageView.setImageWithURL(authorAvataUrl)
                 }
-                userFullNameLabel.text = author!.name
-                userHandleLabel.text = "@" + author!.screenName!
+                userFullNameLabel.text = author.name
+                userHandleLabel.text = "@" + author.screenName!
                 tweetTextLabel.text = tweet?.text
             }
         }
     }
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        userAvatarImageView.layer.cornerRadius = 2
+        userAvatarImageView.clipsToBounds = true
+        layoutSubviews()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        tweetTextLabel.preferredMaxLayoutWidth = CGRectGetWidth(tweetTextLabel.frame)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
