@@ -10,13 +10,10 @@ import UIKit
 
 class UserProfileTableViewController: BaseTweetTableViewController {
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    var user : User!
     
     override func fetchData() {
-        TwitterClient.sharedInstance.userTweets { (tweets, error) -> () in
+        TwitterClient.sharedInstance.userTweets(user.screenName!, requestCompletion: { (tweets, error) -> () in
             self.tweets = tweets
             if tweets != nil {
                 self.tweets = tweets
@@ -25,7 +22,7 @@ class UserProfileTableViewController: BaseTweetTableViewController {
                 // handle error
             }
             self.refreshControl?.endRefreshing()
-        }
+        })
     }
 
 }

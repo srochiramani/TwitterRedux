@@ -50,7 +50,8 @@ class UserProfileViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         // attach the user tweets table view controller
-        let vc = storyboard?.instantiateViewControllerWithIdentifier("UserProfileTableViewController") as! UITableViewController
+        let vc = storyboard?.instantiateViewControllerWithIdentifier("UserProfileTableViewController") as! UserProfileTableViewController
+        vc.user = user
         vc.view.frame.offset(dx: 0, dy: countsDivider.frame.maxY)
         view.addSubview(vc.view)
         addChildViewController(vc)

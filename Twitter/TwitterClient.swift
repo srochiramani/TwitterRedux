@@ -97,9 +97,9 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         })
     }
     
-    func userTweets(requestCompletion : (tweets : [Tweet]?, error : NSError?) -> ()) {
+    func userTweets(userScreenName : String, requestCompletion : (tweets : [Tweet]?, error : NSError?) -> ()) {
         var params = [String : String]()
-        params["screen_name"] = User.currentUser?.screenName
+        params["screen_name"] = userScreenName
         TwitterClient.sharedInstance.GET("1.1/statuses/user_timeline.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
             requestCompletion(tweets: tweets, error: nil)
