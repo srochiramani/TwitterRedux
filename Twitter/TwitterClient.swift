@@ -83,6 +83,36 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         })
     }
     
+    func userMentions(requestCompletion : (tweets : [Tweet]?, error : NSError?) -> ()) {
+        TwitterClient.sharedInstance.GET("1.1/statuses/mentions_timeline.json", parameters: nil, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+            requestCompletion(tweets: tweets, error: nil)
+            for tweet in tweets {
+                println("mentions timeline: \(tweet.text)")
+            }
+            }, failure: { (operation: AFHTTPRequestOperation!, error : NSError!) -> Void in
+                requestCompletion(tweets: nil, error: error)
+                println("mentions timeline failure: \(error.description)")
+                
+        })
+    }
+    
+    func userTweets(requestCompletion : (tweets : [Tweet]?, error : NSError?) -> ()) {
+        var params = [String : String]()
+        params["screen_name"] = User.currentUser?.screenName
+        TwitterClient.sharedInstance.GET("1.1/statuses/user_timeline.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+            requestCompletion(tweets: tweets, error: nil)
+            for tweet in tweets {
+                println("user tweets: \(tweet.text)")
+            }
+            }, failure: { (operation: AFHTTPRequestOperation!, error : NSError!) -> Void in
+                requestCompletion(tweets: nil, error: error)
+                println("user tweets failure: \(error.description)")
+                
+        })
+    }
+    
     func postTweet(tweetMessage : String, replyToId : String?) {
         var params = [String : String]()
         params["status"] = tweetMessage

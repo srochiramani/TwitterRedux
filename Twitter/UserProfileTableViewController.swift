@@ -1,28 +1,22 @@
 //
-//  TweetsViewController.swift
+//  UserProfileTableViewController.swift
 //  Twitter
 //
-//  Created by Sunny Rochiramani on 5/24/15.
+//  Created by Sunny Rochiramani on 5/31/15.
 //  Copyright (c) 2015 Codepath. All rights reserved.
 //
 
 import UIKit
 
-class TweetsViewController: BaseTweetTableViewController, UINavigationBarDelegate, TweetTableViewCellDelegate {
-        
+class UserProfileTableViewController: BaseTweetTableViewController {
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
-    @IBAction func onLogout(sender: AnyObject) {
-        User.currentUser?.logout()
-    }
-    
-    @IBAction func onCompose(sender: AnyObject) {
-    }
     
     override func fetchData() {
-        TwitterClient.sharedInstance.userHomeTimeline { (tweets, error) -> () in
+        TwitterClient.sharedInstance.userTweets { (tweets, error) -> () in
             self.tweets = tweets
             if tweets != nil {
                 self.tweets = tweets
@@ -33,6 +27,5 @@ class TweetsViewController: BaseTweetTableViewController, UINavigationBarDelegat
             self.refreshControl?.endRefreshing()
         }
     }
-
 
 }

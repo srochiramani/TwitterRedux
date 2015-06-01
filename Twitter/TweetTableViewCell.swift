@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol TweetTableViewCellDelegate {
+    func onUserAvatarTapped(user : User)
+}
+
 class TweetTableViewCell: UITableViewCell {
+    
+    var delegate : TweetTableViewCellDelegate?
     
     @IBOutlet weak var userAvatarImageView: UIImageView!
     @IBOutlet weak var userFullNameLabel: UILabel!
@@ -23,6 +29,8 @@ class TweetTableViewCell: UITableViewCell {
                 if author.profileImageUrl != nil {
                     let authorAvataUrl = NSURL(string: author.profileImageUrl!)
                     userAvatarImageView.setImageWithURL(authorAvataUrl)
+                    userAvatarImageView.userInteractionEnabled = true
+                    userAvatarImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("onUserAvatarTapped")))
                 }
                 userFullNameLabel.text = author.name
                 userHandleLabel.text = "@" + author.screenName!
@@ -47,6 +55,13 @@ class TweetTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func onUserAvatarTapped() {
+        print("onUserAvatarTapped")
+        if let delegate = delegate {
+            delegate.onUserAvatarTapped(tweet!.author!)
+        }
     }
 
 }
